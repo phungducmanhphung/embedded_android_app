@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal|center_vertical"
+    tools:context=".ui.main.MainActivity">
+
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Processer IP"
+        android:textAlignment="center"
+        android:layout_margin="20dp"
+        android:id="@+id/edtProccesserIp"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:background="@android:color/holo_blue_bright"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/btnConnect"
+        />
+
+
+
+</LinearLayout>
