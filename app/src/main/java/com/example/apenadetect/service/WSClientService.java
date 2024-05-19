@@ -3,7 +3,10 @@ package com.example.apenadetect.service;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,8 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class WSClientService extends Service {
-
-    private MediaPlayer player;
     private ApenaDetectWsClient apenaDetectWsClient;
     private Intent homeIntent;
     @Override
@@ -50,22 +51,33 @@ public class WSClientService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        Log.d("WSCSJDFSD", "BIGIN START COMMAND");
-//
-//        player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
-//        player.setLooping(true);
-//        player.start();
-
-//        Log.d("WSCSJDFSD", "END START COMMAND");
-
         return START_STICKY;
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        player.stop();
+    }
+
+    public void playSound(){
+        startService(new Intent(this, SoundService.class));
+
+        CountDownTimer countDownTimer;
+        long duration = 5000;
+
+        countDownTimer = new CountDownTimer(duration, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                stopService(new Intent(WSClientService.this, SoundService.class));
+
+            }
+        };
+
+        countDownTimer.start();
     }
 
     @Nullable
@@ -87,10 +99,8 @@ public class WSClientService extends Service {
         @Override
         public void onMessage(String message) {
             Esp32Response response = Helper.ConvertJson(message, Esp32Response.class);
-//            ApenaApplication.NhipTho = response.getNhipTho();
             Log.d("WSCLIENTFSDF", response.toString());
-//            WSClientService.this.homeIntent.putExtra("nhipTho", response.getNhipTho());
-//            WSClientService.this.sendBroadcast( WSClientService.this.homeIntent);
+
             Intent intent = new Intent("SEND_NHIP_THO");
             intent.putExtra("nhipTho", response.getNhipTho());
             sendBroadcast(intent);

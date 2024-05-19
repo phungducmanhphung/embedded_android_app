@@ -30,6 +30,7 @@
         </activity>
 
         <service android:name=".service.WSClientService" />
+        <service android:name=".service.SoundService" />
     </application>
 
 </manifest>
