@@ -18,20 +18,27 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.apenadetect.ApenaApplication;
 import com.example.apenadetect.R;
+import com.example.apenadetect.data.Breathing;
 import com.example.apenadetect.service.SoundService;
+import com.example.apenadetect.ui.statistic.StatisticActivity;
 
 public class HomeActivity extends AppCompatActivity {
     TextView tvNhipTho;
-    Button btnTatCanhBao;
+    Button btnTatCanhBao, btnThongKe;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("SEND_NHIP_THO")) {
-                Double data = intent.getDoubleExtra("nhipTho", -1d); // Lấy dữ liệu từ intent
-                tvNhipTho.setText(data.toString());
-                if(data == 0d && HomeActivity.this.btnTatCanhBao.getVisibility() == View.GONE){
-                    startService(new Intent(HomeActivity.this, SoundService.class));
-                    HomeActivity.this.btnTatCanhBao.setVisibility(View.VISIBLE);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    // get breathing rate from boardcast
+                    Breathing breathing = intent.getSerializableExtra("nhipTho", Breathing.class);
+                    // show breath rate
+                    tvNhipTho.setText(Double.toString(breathing.getBreathRate()));
+                    // check and notify when breath reate equal zero
+                    if(breathing.getBreathRate() == 0d && HomeActivity.this.btnTatCanhBao.getVisibility() == View.GONE){
+                        startService(new Intent(HomeActivity.this, SoundService.class));
+                        HomeActivity.this.btnTatCanhBao.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
@@ -61,12 +68,18 @@ public class HomeActivity extends AppCompatActivity {
     private void setControl() {
         tvNhipTho = findViewById(R.id.tvNhipTho);
         btnTatCanhBao = findViewById(R.id.btnTatCanhBao);
+        btnThongKe = findViewById(R.id.btnThongKe);
     }
 
     private void setEvent() {
         btnTatCanhBao.setOnClickListener(v -> {
             stopService(new Intent(this, SoundService.class));
             btnTatCanhBao.setVisibility(View.GONE);
+        });
+
+        btnThongKe.setOnClickListener(v -> {
+            Intent staticticsIntent = new Intent(this, StatisticActivity.class);
+            startActivity(staticticsIntent);
         });
     }
 }

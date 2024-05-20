@@ -7,37 +7,69 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeActivity"
     android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal"
     >
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical|center_horizontal"
         >
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NHỊP THỞ / PHÚT: "
-            />
+            android:orientation="horizontal"
+            >
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NHỊP THỞ: "
+                android:textStyle="bold"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvNhipTho"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" (Lần/Phút)"
+                />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvNhipTho"
+            android:text="Tắt cảnh báo"
+            android:id="@+id/btnTatCanhBao"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
             />
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tắt cảnh báo"
-        android:id="@+id/btnTatCanhBao"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"
-        />
+        android:padding="10dp"
+        >
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thống kê"
+            android:layout_alignParentRight="true"
+            android:id="@+id/btnThongKe"
+            />
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="pickerDate">
+        <attr name="pickDateIcon" format="reference" />
+        <attr name="pickDateText" format="string" />
+        <attr name="pickDateLabel" format="string" />
+    </declare-styleable>
+</resources>

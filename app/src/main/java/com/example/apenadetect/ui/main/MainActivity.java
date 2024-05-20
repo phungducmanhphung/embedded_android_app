@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             if(v == MainActivity.this.btnConnect){
                 ApenaApplication.WS_HOST = MainActivity.this.edtProccesserIp.getText().toString();
                 startService(new Intent(MainActivity.this, WSClientService.class));
+                finish();
             }
         }
     }

@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.apenadetect.ApenaApplication;
+import com.example.apenadetect.data.BreathDatabase;
+import com.example.apenadetect.data.Breathing;
 import com.example.apenadetect.data.Esp32Response;
 import com.example.apenadetect.helper.Helper;
 import com.example.apenadetect.ui.home.HomeActivity;
@@ -27,10 +29,13 @@ import java.net.URISyntaxException;
 public class WSClientService extends Service {
     private ApenaDetectWsClient apenaDetectWsClient;
     private Intent homeIntent;
+    BreathDatabase breathDatabase;
     @Override
     public void onCreate() {
-//        Log.d("WSCSJDFSD", "BEGIN ON CREATE");
         super.onCreate();
+        // Init database
+        breathDatabase = new BreathDatabase(this);
+        //Start ws client
         try {
             String wsHost = ApenaApplication.WS_HOST;
             int wsPort = ApenaApplication.WS_PORT;
@@ -44,9 +49,7 @@ public class WSClientService extends Service {
 
         } catch (URISyntaxException e) {
             Toast.makeText(this, "KET NOI THAT BAI", Toast.LENGTH_SHORT).show();
-//            throw new RuntimeException(e);
         }
-//        Log.d("WSCSJDFSD", "FINISH ON CREATE");
     }
 
     @Override
@@ -100,24 +103,36 @@ public class WSClientService extends Service {
         public void onMessage(String message) {
             Esp32Response response = Helper.ConvertJson(message, Esp32Response.class);
             Log.d("WSCLIENTFSDF", response.toString());
-
+            /*
+            * save breathing to database
+            * */
+            Breathing breathing = Breathing.builder()
+                    .breathRate(response.getNhipTho())
+                    .timestamp(System.currentTimeMillis() / 1000)
+                    .build();
+            WSClientService.this.breathDatabase.insertBreathData(breathing);
+            /*
+            * send breathing data to all activity
+            * */
             Intent intent = new Intent("SEND_NHIP_THO");
-            intent.putExtra("nhipTho", response.getNhipTho());
+            intent.putExtra("nhipTho", breathing);
             sendBroadcast(intent);
+
+
+
         }
 
         @Override
         public void onClose(int code, String reason, boolean remote) {
             Toast.makeText(WSClientService.this, "WS CLOSE", Toast.LENGTH_SHORT).show();
             Log.d("WSCLIENTFSDF", reason);
-
             Intent intent = new Intent("SEND_CLOSE_WS");
             sendBroadcast(intent);
         }
 
         @Override
         public void onError(Exception ex) {
-            Log.d("WSCLIENTFSDF", ex.getMessage());
+            Toast.makeText(WSClientService.this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
